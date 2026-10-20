@@ -79,17 +79,14 @@
 #cscs-answer-feedback .feedback-answer-chip{display:grid;place-items:center;width:29px;height:27px;border:1px solid #c1d4ea32;border-radius:8px;background:#223146;color:#adbed3;font-size:12px;font-weight:550}
 #cscs-answer-feedback .feedback-answer-chip[data-result=correct]{border-color:#8ad6b2;background:#28503f;color:#d7f4e5}
 #cscs-answer-feedback .feedback-answer-chip[data-result=wrong]{border-color:#eba4b4;background:#58303e;color:#ffdde4}
-#cscs-answer-feedback .feedback-explanation{display:block;height:auto;padding:0;color:#d2dce9;font-size:15px;line-height:1.65;transform-origin:top center}
+#cscs-answer-feedback .feedback-explanation{display:block;height:auto;padding:0;color:#dce5f0;font-family:inherit;font-size:16px;line-height:1.65;font-weight:400;letter-spacing:0;overflow-wrap:anywhere;transform-origin:top center}
 #cscs-answer-feedback .feedback-explanation h3,#cscs-answer-feedback .feedback-explanation h4{break-after:avoid}
-#cscs-answer-feedback .feedback-explanation p{orphans:2;widows:2}
+#cscs-answer-feedback .feedback-explanation p{orphans:2;widows:2;text-wrap:pretty}
 #cscs-answer-feedback .feedback-explanation h3{display:flex;align-items:center;gap:9px;margin:0 0 12px;color:#e9dbc3;font-size:15px;line-height:1.5;font-weight:600;letter-spacing:.2px}
 #cscs-answer-feedback .feedback-explanation h3::before{content:'';width:3px;height:14px;background:#c7aa76;border-radius:1px}
-#cscs-answer-feedback .feedback-explanation h4{margin:9px 0 5px;color:#cdbb9a;font-size:12px;font-weight:500}
-#cscs-answer-feedback .feedback-explanation p{margin:0 0 6px}
+#cscs-answer-feedback .feedback-explanation h4{margin:14px 0 6px;color:#dac9ab;font-size:14px;line-height:1.5;font-weight:600;letter-spacing:.1px}
+#cscs-answer-feedback .feedback-explanation p{margin:0 0 10px}
 #cscs-answer-feedback .feedback-explanation p:last-child{margin-bottom:0}
-#cscs-answer-feedback .feedback-page[data-reading-tight=true] .feedback-explanation{line-height:1.5}
-#cscs-answer-feedback .feedback-page[data-reading-tight=true] .feedback-explanation h4{margin-top:7px;margin-bottom:4px}
-#cscs-answer-feedback .feedback-page[data-reading-tight=true] .feedback-reading-header{margin-bottom:4px}
 #cscs-answer-feedback .feedback-explanation-toggle{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;height:46px;min-height:46px;margin:0;padding:11px 22px;border:0;border-top:1px solid #c8b08a1c;border-radius:0;background:#152133;color:#d9d3c8;text-align:left;font-size:13px}
 #cscs-answer-feedback .feedback-explanation-toggle:disabled{color:#7f8da1;background:#111c2c}
 #cscs-answer-feedback .feedback-explanation-toggle:disabled .toggle-state{opacity:.45}
@@ -128,7 +125,7 @@
 @media(prefers-reduced-motion:reduce){#cscs-answer-feedback .feedback-option,#cscs-answer-feedback .option-letter,#cscs-answer-feedback .option-mark,#cscs-answer-feedback .toggle-label>span,#cscs-answer-feedback .toggle-chevron,#cscs-answer-feedback .feedback-actions button,#cscs-answer-feedback .feedback-progress span{transition:none}#cscs-answer-feedback .feedback-atmosphere{display:none}#cscs-answer-feedback .feedback-galaxy-track{animation:none;transform:translateX(-50%)}}
 
 
-@media(max-width:360px){#cscs-answer-feedback .feedback-head{min-height:42px;padding:6px 16px}#cscs-answer-feedback[data-book-open=true] .feedback-body{padding:7px 16px 0}#cscs-answer-feedback[data-book-open=true] h2{font-size:16px;line-height:1.4;margin-bottom:8px}#cscs-answer-feedback .feedback-page{padding:10px 16px}#cscs-answer-feedback .feedback-explanation{font-size:14px;line-height:1.55}}
+@media(max-width:360px){#cscs-answer-feedback .feedback-head{min-height:42px;padding:6px 16px}#cscs-answer-feedback[data-book-open=true] .feedback-body{padding:7px 16px 0}#cscs-answer-feedback[data-book-open=true] h2{font-size:16px;line-height:1.4;margin-bottom:8px}#cscs-answer-feedback .feedback-page{padding:10px 16px}}
 
 @media(max-width:360px){#cscs-answer-feedback .feedback-head{min-height:48px;padding:0 16px}#cscs-answer-feedback .feedback-heading-group{gap:10px}#cscs-answer-feedback .feedback-brand{font-size:23px}#cscs-answer-feedback .feedback-head .feedback-category-open{font-size:11px}#cscs-answer-feedback .feedback-head .feedback-count{min-width:38px}}
 @media(prefers-reduced-motion:reduce){#cscs-answer-feedback .feedback-category-chevron,#cscs-answer-feedback .feedback-picker::backdrop{transition:none}}
@@ -262,12 +259,7 @@
 #cscs-answer-feedback[data-book-open=true][data-option-count="5"] fieldset{grid-auto-rows:30px;gap:2px}
 #cscs-answer-feedback[data-book-open=true][data-option-count="5"] .feedback-option{height:30px;min-height:30px;padding-block:0}
 #cscs-answer-feedback[data-book-open=true][data-option-count="5"] .option-text{font-size:12px;line-height:14px}
-#cscs-answer-feedback[data-option-count="5"] .feedback-page[data-reading-tight=true]{padding-top:8px;padding-bottom:8px}
-#cscs-answer-feedback[data-option-count="5"] .feedback-page[data-reading-tight=true] .feedback-explanation{line-height:1.45}
-#cscs-answer-feedback[data-option-count="5"] .feedback-page[data-reading-tight=true] .feedback-explanation p{margin-bottom:4px}
-#cscs-answer-feedback[data-option-count="5"] .feedback-page[data-reading-tight=true] .feedback-explanation h4{margin-top:5px;margin-bottom:3px}
-
-#cscs-answer-feedback .feedback-reading-viewport{overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#7d9dc252 transparent;touch-action:pan-y}
+#cscs-answer-feedback .feedback-reading-viewport{overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#7d9dc252 transparent;scrollbar-gutter:stable;scroll-padding-block:10px;touch-action:pan-y pinch-zoom;-webkit-overflow-scrolling:touch}
 #cscs-answer-feedback[data-long-explanation=true][data-book-open=true] .feedback-explanation-toggle>span:first-child::after{content:' · 滑动阅解析';font-size:10px;color:#90a8c4;font-weight:400}
 #cscs-answer-feedback .feedback-picker-list{max-height:44dvh;overflow-y:auto;overscroll-behavior:contain;align-content:start;scrollbar-width:thin}
 #cscs-answer-feedback .feedback-picker-list{padding-inline:2px;overflow-x:hidden}
@@ -319,6 +311,9 @@
 #cscs-answer-feedback .toggle-chevron svg{display:block;width:18px;height:18px}
 #cscs-answer-feedback[data-input=keyboard] .toggle-chevron{transition:none}
 @media(prefers-reduced-motion:reduce){#cscs-answer-feedback .toggle-chevron{transition:none}}
+
+/* Keep readable copy consistent; long answers scroll rather than compress. */
+@media(max-width:360px){#cscs-answer-feedback .feedback-page{padding-inline:16px}}
 
 </style>
 <div id="cscs-answer-feedback" data-bank="full" data-surface="page" class="viz-dotted-background" aria-label="CSCS题库">
@@ -458,15 +453,13 @@ SOFTWARE.
     }
     save();
   }
-  function syncReadingPages(){if(bookPage.hidden)return;explanation.style.fontSize=(phone.clientWidth<=360?14:15)+'px';explanation.style.transform='';const viewport=root.querySelector('.feedback-reading-viewport');if(explanation.scrollHeight>viewport.clientHeight+1)bookPage.dataset.readingTight='true';const long=explanation.scrollHeight>viewport.clientHeight+1;root.dataset.longExplanation=String(long);if(long){viewport.setAttribute('tabindex','0');viewport.setAttribute('aria-label','解析较长，可在此区域内滚动阅读全文');}else{viewport.removeAttribute('tabindex');viewport.removeAttribute('aria-label');}}
+  function syncReadingPages(){if(bookPage.hidden)return;const viewport=root.querySelector('.feedback-reading-viewport');const long=viewport.scrollHeight>viewport.clientHeight+1;root.dataset.longExplanation=String(long);if(long){viewport.setAttribute('tabindex','0');viewport.setAttribute('aria-label','解析较长，可在此区域内滚动阅读全文');}else{viewport.removeAttribute('tabindex');viewport.removeAttribute('aria-label');}}
   function fillExplanation(container,q){
     container.replaceChildren(...(q.basis||[]).map(x=>node('p',x)));
     if(q.context?.length)container.append(node('h4','选项辨析'),...q.context.map(x=>node('p',x)));
     if(q.conditions?.length)container.append(node('h4','适用条件'),...q.conditions.map(x=>node('p',x)));
   }
   function fitReadingLayout(){
-    bookPage.removeAttribute('data-reading-tight');
-    explanation.style.fontSize=(phone.clientWidth<=360?14:15)+'px';
     const target=Math.min(answerTitleAnchor(),root.querySelector('.feedback-head').getBoundingClientRect().bottom+8);
     const lead=target-(body.getBoundingClientRect().top-categoryShiftY());
     phone.style.setProperty('--fb-open-lead',Math.max(2,lead)+'px');

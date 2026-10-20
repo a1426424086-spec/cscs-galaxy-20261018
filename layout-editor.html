@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CSCS · 拖动调整排版</title>
+<style>:root{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;color:#26344a;background:#eef1f6;color-scheme:light;-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button,select,input{touch-action:manipulation}button,a{-webkit-tap-highlight-color:transparent}button{user-select:none}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #498be0;outline-offset:3px}
+.editor{height:100dvh;max-width:1200px;margin:auto;padding:18px 24px;display:flex;flex-direction:column;gap:16px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:20px;flex:none}.toolbar h1{margin:0 0 5px;font-size:22px;letter-spacing:-.5px;font-weight:650}.toolbar p{margin:0;color:#66768c;font-size:12px;line-height:1.6}.toolbar-actions{display:flex;align-items:center;gap:14px}.toolbar a{color:#3c6593;font-size:12px;white-space:nowrap}.toolbar select{min-height:42px;border:1px solid #ccd6e3;border-radius:10px;padding:8px 10px;background:#fff;color:#344960;font-size:13px}
+.workspace{flex:1;min-height:0;display:grid;grid-template-columns:minmax(350px,1fr) 310px;gap:28px}.preview-area{position:relative;display:flex;justify-content:center;align-items:center;min-width:0;min-height:0;overflow:hidden;border-radius:20px;background-image:radial-gradient(#b8c5d633 1px,transparent 1px);background-size:16px 16px}.phone-space{position:relative;flex:none}.phone-board{position:absolute;inset:0 auto auto 0;transform-origin:top left;border-radius:20px;overflow:hidden;background:#0c1422;box-shadow:0 14px 42px #22314d25}.phone-board iframe{display:block;border:0;pointer-events:none;width:100%;height:100%}.drag-layer{position:absolute;inset:0;pointer-events:none}.scale-note{position:absolute;bottom:2px;left:10px;color:#75879f;font-size:10px;pointer-events:none}
+.drag-box{position:absolute;pointer-events:auto;border:1px dashed #8cb8f96b;border-radius:9px;touch-action:none;background:transparent;cursor:move;outline-offset:2px}.drag-box.selected{border:2px solid #78adff;background:#88b5ff07;z-index:3}.drag-box .box-label{position:absolute;left:1px;top:0;transform:translateY(-100%);padding:3px 7px;border-radius:5px 5px 0 0;background:#326ebf;color:#fff;font-size:10px;line-height:14px;white-space:nowrap;pointer-events:none;opacity:0}.drag-box.selected .box-label{opacity:1}.resize-grip{position:absolute;right:-7px;bottom:-7px;width:24px;height:24px;border:0;background:transparent;cursor:nwse-resize;touch-action:none}.resize-grip::after{content:'';position:absolute;inset:6px;border:2px solid #fff;border-radius:4px;background:#427fcc;box-shadow:0 1px 6px #07162c60}.drag-box:not(.selected) .resize-grip{display:none}
+.controls{min-height:0;overflow:auto;border:1px solid #dce3ed;border-radius:17px;background:#fff;padding:18px;box-shadow:0 8px 28px #22314d06}.section-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}.section-heading h2{margin:0;font-size:15px;font-weight:600}.draft-badge{color:#647d9d;background:#edf3fb;padding:4px 7px;border-radius:6px;font-size:10px}.targets{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:14px 0 9px}.targets button{min-height:36px;border:1px solid #d6e0ed;border-radius:8px;background:#f8fafc;color:#536a89;font-size:12px}.targets button[aria-pressed=true]{background:#24456e;color:#fff;border-color:#24456e}.target-hint{color:#728299;font-size:11px;line-height:1.6;margin:0 0 12px;min-height:34px}.field{border-top:1px solid #edf1f5;padding:10px 0}.field label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;margin-bottom:7px}.field input[type=number]{width:68px;height:29px;padding:3px 5px;border:1px solid #d8e1ed;border-radius:6px;background:#f9fbfd;color:#334b6b;font-size:12px;font-variant-numeric:tabular-nums}.field input[type=range]{width:100%;height:20px;margin:0;accent-color:#376ca7}.field .unit{color:#98a4b5;font-size:10px;margin-left:5px}.secondary,.primary{min-height:42px;padding:8px 10px;border:1px solid #cad6e5;border-radius:9px;background:#f2f6fb;color:#456081;font-size:12px}.primary{background:#25476f;border-color:#25476f;color:#fff}.wide{width:100%;margin-top:10px}.save-actions{display:grid;grid-template-columns:1fr 1.15fr;gap:7px;margin-top:15px}.readout{margin-top:14px;font-size:11px;line-height:1.7;color:#536f61}.readout strong{font-weight:500;display:block}.readout[data-warning=true]{color:#9d6b34}.readout span{display:block;color:#78899f;font-variant-numeric:tabular-nums}#save-status{font-size:11px;line-height:1.6;color:#6e8198;margin:12px 0 4px}.text-button{border:0;background:none;padding:5px 0;color:#34669d;font-size:11px;min-height:30px}.text-button:disabled{opacity:.4}details{font-size:11px;color:#7c8aa0}summary{padding:8px 0;cursor:default}textarea{width:100%;min-height:160px;border:1px solid #dce4ef;border-radius:8px;padding:8px;font-family:ui-monospace,monospace;font-size:10px;color:#405775;background:#f7f9fc;resize:vertical}button:active{opacity:.8}.dragging .phone-board{user-select:none}
+@media(max-width:760px){.editor{padding:12px;gap:10px}.toolbar{align-items:flex-start;gap:10px}.toolbar h1{font-size:17px}.toolbar p{max-width:280px;font-size:10px}.toolbar-actions{flex-direction:column;align-items:flex-end;gap:5px}.toolbar select{max-width:150px;font-size:11px;min-height:36px}.toolbar a{font-size:10px}.workspace{grid-template-columns:minmax(220px,1fr) 245px;gap:12px}.controls{padding:12px}.targets{gap:5px}.field{padding:8px 0}.save-actions{grid-template-columns:1fr}.save-actions button{min-height:38px}}
+@media(max-width:560px){.editor{height:auto;min-height:100dvh}.toolbar{flex-wrap:wrap}.toolbar-actions{width:100%;flex-direction:row;justify-content:space-between}.workspace{display:flex;flex-direction:column;gap:14px}.preview-area{height:58dvh;min-height:320px;flex:none}.controls{overflow:visible;flex:none}.targets{grid-template-columns:repeat(4,1fr)}.field-list{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.target-hint{min-height:0}.save-actions{grid-template-columns:1fr 1.2fr}.field input[type=number]{font-size:16px;min-height:34px}.resize-grip{width:32px;height:32px;right:-11px;bottom:-11px}}
+</style>
+</head>
+<body>
+<div class="editor">
+  <header class="toolbar">
+    <div><h1>把位置调到你喜欢的样子</h1><p>拖动蓝框移动，拉右下角改变大小。调好后保存，我再同步到线上。</p></div>
+    <div class="toolbar-actions"><a href="index.html" target="_blank" rel="noopener">对照当前题库</a><select id="viewport" aria-label="预览尺寸"><option value="430,555">当前页面 · 430 × 555</option><option value="390,720">常规手机 · 390 × 720</option><option value="320,640">小屏手机 · 320 × 640</option></select><button id="save-top" class="primary">保存排版</button></div>
+  </header>
+  <main class="workspace">
+    <section class="preview-area" aria-label="可拖动的排版预览">
+      <div class="phone-space"><div class="phone-board">
+        <iframe id="preview" title="当前银河版的排版预览" tabindex="-1"></iframe>
+        <div class="drag-layer" aria-label="拖动和缩放控件"></div>
+      </div></div>
+      <span class="scale-note"></span>
+    </section>
+    <aside class="controls" aria-label="调整尺寸和位置">
+      <div class="section-heading"><h2>调整区域</h2><span class="draft-badge">排版草稿</span></div>
+      <div class="targets" role="group" aria-label="选择调整区域">
+        <button data-target="question">题干</button><button data-target="cards" aria-pressed="true">三个选项</button><button data-target="analysis">答案解析</button><button data-target="navigation">底部操作</button>
+      </div>
+      <p class="target-hint"></p>
+      <div class="field-list"></div>
+      <button id="distribute" class="secondary wide">让三个选项等距排列</button>
+      <div class="readout" aria-live="polite"><strong id="layout-status">正在载入当前版本…</strong><span id="layout-measure"></span></div>
+      <div class="save-actions"><button id="reset" class="secondary">恢复当前线上</button><button id="save" class="primary">保存我的排版</button></div>
+      <p id="save-status" role="status" aria-live="polite">保存后回到聊天，告诉我“按这版改”。</p>
+      <button id="download" class="text-button" disabled>导出排版参数</button>
+      <details id="saved-details"><summary>查看已保存的位置</summary><textarea id="saved-layout" readonly aria-label="已保存的排版参数"></textarea></details>
+    </aside>
+  </main>
+</div>
+<script>(() => {
+  const schema='cscs-layout-editor-v2',sourceVersion='v21',sourceSha='5e46ae768fc021fa7f37f275551fdbf6b319d70c46c62dd3024e19e3b5171992';
+  const frame=document.querySelector('#preview'),board=document.querySelector('.phone-board'),space=document.querySelector('.phone-space'),area=document.querySelector('.preview-area'),layer=document.querySelector('.drag-layer'),viewportSelect=document.querySelector('#viewport');
+  const testRun=new URLSearchParams(location.search).get('qa')==='check',scope=testRun?':test':'',savedKey=schema+':saved'+scope;
+  const names={question:'题干',cards:'三个选项',analysis:'答案解析',navigation:'底部操作'};
+  const hints={question:'拖动题干调整位置。字号可调，始终保留四行区域。',cards:'拖动任一选项会带着三个一起移动；拉右下角统一改大小，间距单独调。',analysis:'拖动或缩放答案解析栏，可以把这一栏调薄一点。',navigation:'调整上一题、重新答题、下一题和清空行的整体位置与大小。'};
+  let viewport=[430,555],selected='cards',scale=1,baseline=null,values=null,saved=null,parts=null,drag=null,frameToken=0,boxes=[];
+  const copy=x=>JSON.parse(JSON.stringify(x)),clamp=(v,min,max)=>Math.max(min,Math.min(max,v)),round=v=>Math.round(v*10)/10;
+  const draftKey=()=>schema+':draft:'+viewport.join('x')+scope;
+  const px=(el,prop,n)=>el.style.setProperty(prop,round(n)+'px','important');
+  const set=(el,prop,value)=>el.style.setProperty(prop,value,'important');
+  function status(text){document.querySelector('#save-status').textContent=text;}
+  function fitPreview(){const [w,h]=viewport;scale=Math.max(.25,Math.min(1,(area.clientWidth-20)/w,(area.clientHeight-22)/h));board.style.width=w+'px';board.style.height=h+'px';board.style.transform='scale('+scale+')';space.style.width=w*scale+'px';space.style.height=h*scale+'px';document.querySelector('.scale-note').textContent=w+' × '+h+' · 显示比例 '+Math.round(scale*100)+'%';}
+  function position(el,r){set(el,'position','absolute');set(el,'inset','auto');set(el,'translate','none');set(el,'transform','none');set(el,'margin','0');px(el,'left',r.x);px(el,'top',r.y);px(el,'width',r.width);px(el,'height',r.height);set(el,'min-height','0');}
+  function sanitize(raw){const out=copy(baseline);if(!raw||raw.sourceVersion!==sourceVersion||!raw.values)return out;for(const target of Object.keys(out)){for(const key of Object.keys(out[target])){const n=raw.values[target]?.[key];if(Number.isFinite(n))out[target][key]=clamp(n,-100,1500);}}return out;}
+  function freezeCurrentFrame(){
+    const d=frame.contentDocument,live=d.querySelector('#cscs-answer-feedback');if(!live)throw new Error('预览没有载入完成');
+    const root=live.cloneNode(true);live.replaceWith(root);const phone=root.querySelector('.feedback-phone');const origin=phone.getBoundingClientRect();
+    const rect=el=>{const r=el.getBoundingClientRect();return{x:round(r.left-origin.left),y:round(r.top-origin.top),width:round(r.width),height:round(r.height)}};
+    const title=root.querySelector('h2'),cards=root.querySelector('fieldset'),rows=[...cards.querySelectorAll('.feedback-option')],analysis=root.querySelector('.feedback-explanation-toggle'),actions=root.querySelector('.feedback-actions'),records=root.querySelector('.feedback-reader-group>.feedback-record-tools');
+    const titleStyle=d.defaultView.getComputedStyle(title),actionStyle=d.defaultView.getComputedStyle(actions),q=rect(title),a=rect(rows[0]),b=rect(rows[1]),ar=rect(analysis),nr=rect(actions),rr=rect(records),font=parseFloat(titleStyle.fontSize),lineHeight=parseFloat(titleStyle.lineHeight);
+    const navBase={actionsHeight:nr.height,clearHeight:rr.height,buttonHeight:rect(actions.querySelector('button')).height,padTop:parseFloat(actionStyle.paddingTop),padBottom:parseFloat(actionStyle.paddingBottom)};
+    const model={question:{...q,font,lineHeight},cards:{x:a.x,y:a.y,width:a.width,height:a.height,gap:round(b.y-a.y-a.height)},analysis:ar,navigation:{x:nr.x,y:nr.y,width:nr.width,height:round(rr.y+rr.height-nr.y)}};
+    const progress=root.querySelector('.feedback-progress'),pr=rect(progress);phone.append(progress,title,cards,analysis);position(progress,pr);
+    const nav=d.createElement('div');nav.className='layout-editor-navigation';nav.append(actions,records);phone.append(nav);
+    root.querySelector('.feedback-scroll').style.display='none';root.querySelector('.feedback-category-panel').hidden=true;root.querySelectorAll('dialog').forEach(x=>x.remove());
+    set(cards,'display','grid');set(cards,'padding','0');set(cards,'border','0');set(cards,'overflow','visible');set(analysis,'min-height','0');set(analysis,'padding-block','0');set(analysis,'display','flex');set(nav,'background','#101b2a');set(nav,'display','flex');set(nav,'flex-direction','column');
+    set(actions,'width','100%');set(actions,'min-height','0');set(actions,'flex','1');set(actions,'padding','8px 14px 4px');set(actions,'margin','0');
+    set(records,'display','flex');set(records,'align-items','center');set(records,'justify-content','space-between');set(records,'margin','0');set(records,'padding','0 20px');set(records,'border','0');
+    records.querySelectorAll('button').forEach(x=>{set(x,'font-size','11px');set(x,'padding','0');set(x,'min-height','0');set(x,'height','100%')});
+    parts={root,phone,title,cards,rows,analysis,nav,actions,records,navBase};baseline=model;values=copy(model);
+    try{const draft=JSON.parse(localStorage.getItem(draftKey())||'null');if(draft)values=sanitize(draft);}catch{}
+    buildBoxes();buildFields();render();
+  }
+  function loadFrame(){
+    parts=null;baseline=null;values=null;layer.replaceChildren();const token=++frameToken;fitPreview();document.querySelector('#layout-status').textContent='正在载入当前版本…';
+    frame.onload=()=>{requestAnimationFrame(()=>requestAnimationFrame(()=>{if(token!==frameToken)return;try{freezeCurrentFrame();}catch(e){document.querySelector('#layout-status').textContent='预览暂未就绪，请刷新调整页。';}}));};
+    const embedded=document.querySelector('#embedded-preview');
+    if(embedded){
+      frame.srcdoc=new TextDecoder().decode(Uint8Array.from(atob(embedded.textContent.trim()),c=>c.charCodeAt(0)));
+    }else{
+      frame.src='index.html?qa=layout&position-editor='+token;
+    }
+  }
+  function specs(){const shared=[{key:'x',label:'左侧位置',min:0,max:viewport[0]-80},{key:'y',label:'距顶部',min:0,max:viewport[1]-24},{key:'width',label:'宽度',min:140,max:viewport[0]}];if(selected==='question')return shared.concat({key:'font',label:'题干字号',min:16,max:26});return shared.concat({key:'height',label:selected==='cards'?'每张卡片高度':'整体高度',min:selected==='cards'?32:selected==='analysis'?28:70,max:selected==='cards'?90:selected==='analysis'?70:180},...(selected==='cards'?[{key:'gap',label:'卡片间距',min:0,max:50}]:[]));}
+  function buildFields(){
+    const host=document.querySelector('.field-list');host.replaceChildren();document.querySelector('.target-hint').textContent=hints[selected];document.querySelector('#distribute').hidden=selected!=='cards';
+    document.querySelectorAll('[data-target]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.target===selected)));
+    for(const f of specs()){const row=document.createElement('div');row.className='field';const label=document.createElement('label');label.htmlFor='edit-'+f.key;label.append(document.createTextNode(f.label));const count=document.createElement('span'),number=document.createElement('input'),unit=document.createElement('span');number.type='number';number.min=f.min;number.max=f.max;number.step=1;number.dataset.number=f.key;number.setAttribute('aria-label',f.label+'数值');unit.className='unit';unit.textContent='px';count.append(number,unit);label.append(count);const range=document.createElement('input');range.type='range';range.id='edit-'+f.key;range.dataset.range=f.key;range.min=f.min;range.max=f.max;range.step=1;range.setAttribute('aria-label',f.label);const change=value=>{if(!values||!Number.isFinite(Number(value)))return;values[selected][f.key]=clamp(Number(value),f.min,f.max);if(f.key==='font'){values.question.lineHeight=values.question.font*(baseline.question.lineHeight/baseline.question.font);values.question.height=Math.ceil(values.question.lineHeight*4);}rememberDraft();render();};range.addEventListener('input',()=>change(range.value));number.addEventListener('input',()=>{const n=Number(number.value);if(number.value!==''&&Number.isFinite(n)&&n>=f.min&&n<=f.max)change(n);});number.addEventListener('change',()=>change(number.value));row.append(label,range);host.append(row);}
+  }
+  function select(target){if(!names[target])return;selected=target;buildFields();render();}
+  function rects(){const c=values.cards;return[{target:'question',label:'题干 · 四行',...values.question},...parts.rows.map((_,i)=>({target:'cards',label:'选项 '+String.fromCharCode(65+i),index:i,x:c.x,y:c.y+i*(c.height+c.gap),width:c.width,height:c.height})),{target:'analysis',label:'答案解析',...values.analysis},{target:'navigation',label:'底部操作',...values.navigation}];}
+  function buildBoxes(){
+    layer.replaceChildren();boxes=[];for(const r of rects()){const box=document.createElement('div');box.className='drag-box';box.tabIndex=0;box.setAttribute('role','button');box.setAttribute('aria-label','拖动'+r.label);box.dataset.target=r.target;box.dataset.index=r.index??'';const label=document.createElement('span');label.className='box-label';label.textContent=r.label;box.append(label);if(r.target!=='question'){const grip=document.createElement('button');grip.className='resize-grip';grip.type='button';grip.setAttribute('aria-label','缩放'+r.label);grip.addEventListener('pointerdown',e=>startDrag(e,r.target,'resize'));box.append(grip);}box.addEventListener('pointerdown',e=>{if(e.target.closest('.resize-grip'))return;startDrag(e,r.target,'move');});box.addEventListener('keydown',e=>{if(!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();select(r.target);const step=e.shiftKey?10:2,mode=e.target.classList.contains('resize-grip')?'resize':'move';const key=e.key==='ArrowLeft'||e.key==='ArrowRight'?(mode==='resize'?'width':'x'):(mode==='resize'?'height':'y');const direction=e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:1;values[r.target][key]=Math.max(key==='width'?140:key==='height'?28:0,values[r.target][key]+step*direction);rememberDraft();render();});layer.append(box);boxes.push(box);}
+  }
+  function startDrag(e,target,mode){if(!values)return;e.preventDefault();e.stopPropagation();select(target);drag={target,mode,startX:e.clientX,startY:e.clientY,scale,initial:copy(values[target]),handle:e.currentTarget};e.currentTarget.setPointerCapture(e.pointerId);document.body.classList.add('dragging');}
+  layer.addEventListener('pointermove',e=>{if(!drag)return;const r=values[drag.target],dx=(e.clientX-drag.startX)/drag.scale,dy=(e.clientY-drag.startY)/drag.scale;if(drag.mode==='move'){r.x=round(clamp(drag.initial.x+dx,0,viewport[0]-80));r.y=round(clamp(drag.initial.y+dy,0,viewport[1]-24));}else{r.width=round(clamp(drag.initial.width+dx,140,viewport[0]-r.x));const min=drag.target==='navigation'?70:drag.target==='analysis'?28:32,max=drag.target==='navigation'?180:drag.target==='analysis'?70:90;r.height=round(clamp(drag.initial.height+dy,min,max));}render();});
+  function stopDrag(){if(!drag)return;drag=null;document.body.classList.remove('dragging');rememberDraft();}
+  layer.addEventListener('pointerup',stopDrag);layer.addEventListener('pointercancel',stopDrag);
+  function rememberDraft(){if(!values)return;try{localStorage.setItem(draftKey(),JSON.stringify({sourceVersion,values}));}catch{}document.querySelector('#save').textContent='保存我的排版';document.querySelector('#save-top').textContent='保存排版';status('这是尚未同步到网站的排版草稿。');}
+  function warnings(){const q=values.question,c=values.cards,a=values.analysis,n=values.navigation,bottom=c.y+parts.rows.length*c.height+(parts.rows.length-1)*c.gap,out=[];if(q.y+q.height>c.y+1)out.push('题干与选项重叠 '+Math.ceil(q.y+q.height-c.y)+'px');if(bottom>a.y+1)out.push('选项与解析栏重叠 '+Math.ceil(bottom-a.y)+'px');if(a.y+a.height>n.y+1)out.push('解析栏与操作区重叠');if(n.y+n.height>viewport[1]+1)out.push('底部超出画面 '+Math.ceil(n.y+n.height-viewport[1])+'px');if(rects().some(r=>r.x+r.width>viewport[0]+1))out.push('有区域超出右侧');return out;}
+  function render(){
+    if(!parts||!values)return;position(parts.title,values.question);px(parts.title,'font-size',values.question.font);px(parts.title,'line-height',values.question.lineHeight);
+    const c=values.cards;position(parts.cards,{x:c.x,y:c.y,width:c.width,height:parts.rows.length*c.height+(parts.rows.length-1)*c.gap});px(parts.cards,'gap',c.gap);set(parts.cards,'grid-template-rows',parts.rows.map(()=>c.height+'px').join(' '));set(parts.cards,'grid-auto-rows',c.height+'px');parts.rows.forEach(row=>{px(row,'height',c.height);px(row,'min-height',c.height);set(row,'padding-block',c.height<48?'2px':'6px');});
+    position(parts.analysis,values.analysis);position(parts.nav,values.navigation);const ratio=values.navigation.height/baseline.navigation.height,clear=parts.navBase.clearHeight*ratio,button=parts.navBase.buttonHeight*ratio;px(parts.records,'height',clear);set(parts.records,'flex','0 0 '+clear+'px');px(parts.actions,'height',parts.navBase.actionsHeight*ratio);set(parts.actions,'flex','none');px(parts.actions,'padding-top',parts.navBase.padTop*ratio);px(parts.actions,'padding-bottom',parts.navBase.padBottom*ratio);parts.actions.querySelectorAll('button').forEach(el=>{px(el,'height',button);px(el,'min-height',button);set(el,'padding-block','0');});
+    const all=rects();boxes.forEach((box,i)=>{const r=all[i];Object.assign(box.style,{left:r.x+'px',top:r.y+'px',width:r.width+'px',height:r.height+'px'});box.classList.toggle('selected',r.target===selected);});
+    for(const f of specs()){const number=document.querySelector('[data-number='+f.key+']'),range=document.querySelector('[data-range='+f.key+']');if(number&&document.activeElement!==number)number.value=round(values[selected][f.key]);if(range)range.value=values[selected][f.key];}
+    const warn=warnings();document.querySelector('.readout').dataset.warning=String(!!warn.length);document.querySelector('#layout-status').textContent=warn.length?warn.join('；'):'当前没有区域重叠。';document.querySelector('#layout-measure').textContent='选项高度 '+round(c.height)+' · 间距 '+round(c.gap)+' · 解析栏 '+round(values.analysis.height)+' px';
+  }
+  document.querySelectorAll('[data-target]').forEach(b=>b.addEventListener('click',()=>select(b.dataset.target)));
+  viewportSelect.addEventListener('change',()=>{viewport=viewportSelect.value.split(',').map(Number);try{localStorage.setItem(schema+':viewport'+scope,viewportSelect.value);}catch{}loadFrame();});
+  document.querySelector('#distribute').addEventListener('click',()=>{if(!values)return;const top=values.question.y+values.question.height,available=values.analysis.y-top,n=parts.rows.length;values.cards.height=Math.max(32,Math.min(values.cards.height,Math.floor((available-(n+1)*12)/n)));values.cards.gap=round(Math.max(4,(available-n*values.cards.height)/(n+1)));values.cards.y=round(top+values.cards.gap);rememberDraft();render();});
+  document.querySelector('#reset').addEventListener('click',()=>{if(!baseline)return;values=copy(baseline);rememberDraft();render();status('已恢复这一尺寸的线上原始位置。');});
+  document.querySelector('#save').addEventListener('click',()=>{if(!values)return;saved={schema,sourceVersion,sourceSha,viewport:{width:viewport[0],height:viewport[1]},values:copy(values),rectangles:rects(),warnings:warnings(),savedAt:new Date().toISOString()};try{localStorage.setItem(savedKey,JSON.stringify(saved));localStorage.setItem(draftKey(),JSON.stringify({sourceVersion,values}));document.querySelector('#save').textContent='排版已保存';document.querySelector('#save-top').textContent='已保存';status('已保存。回到聊天告诉我“按这版改”，我会读取这组位置。');showSaved();}catch{status('浏览器保存失败，请点击导出参数保留这组位置。');showSaved();}});
+  document.querySelector('#save-top').addEventListener('click',()=>document.querySelector('#save').click());
+  function showSaved(){if(!saved)return;document.querySelector('#saved-layout').value=JSON.stringify(saved,null,2);document.querySelector('#download').disabled=false;document.querySelector('#saved-details summary').textContent='已保存 '+saved.viewport.width+' × '+saved.viewport.height+' 的位置';}
+  document.querySelector('#download').addEventListener('click',()=>{if(!saved)return;const link=document.createElement('a'),url=URL.createObjectURL(new Blob([JSON.stringify(saved,null,2)],{type:'application/json'}));link.href=url;link.download='CSCS-排版位置-'+saved.viewport.width+'x'+saved.viewport.height+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+  try{saved=JSON.parse(localStorage.getItem(savedKey)||'null');if(saved?.schema!==schema)saved=null;const last=localStorage.getItem(schema+':viewport'+scope);if(['430,555','390,720','320,640'].includes(last)){viewport=last.split(',').map(Number);viewportSelect.value=last;}showSaved();}catch{}
+  new ResizeObserver(fitPreview).observe(area);loadFrame();
+})();
+</script>
+</body>
+</html>

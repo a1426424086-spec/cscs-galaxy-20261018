@@ -97,7 +97,7 @@
 #cscs-answer-feedback .feedback-explanation-toggle[aria-expanded=true] .label-expand{transform:translateY(-115%);opacity:0}
 #cscs-answer-feedback .feedback-explanation-toggle[aria-expanded=true] .label-collapse{transform:translateY(0);opacity:1}
 #cscs-answer-feedback .toggle-chevron{display:inline-block;transition:transform 240ms var(--fb-ease)}
-#cscs-answer-feedback .feedback-explanation-toggle[aria-expanded=true] .toggle-chevron{transform:rotate(180deg)}
+#cscs-answer-feedback .feedback-explanation-toggle[aria-expanded=true] .toggle-chevron{transform:rotate(0deg)}
 #cscs-answer-feedback .feedback-actions{position:relative;display:grid;grid-template-columns:1fr 1.13fr 1.13fr;gap:8px;width:100%;margin:0;padding:13px 18px calc(16px + var(--fb-safe-bottom));border-top:1px solid #bed2ef13;background:#101b2a}
 #cscs-answer-feedback .feedback-actions button{position:relative;display:flex;align-items:center;justify-content:center;gap:5px;min-width:0;height:48px;min-height:48px;padding:10px 6px;border:1px solid #c2d2e71c;border-radius:13px;background:#233247;color:#dce6f3;font-size:13px;font-weight:550;white-space:nowrap;transition:opacity 160ms ease,background-color 160ms ease}
 #cscs-answer-feedback .feedback-actions .feedback-primary{border-color:#d9e8ff60;background:#c8dcf7;color:#162d4b}
@@ -307,7 +307,7 @@
 #cscs-answer-feedback{--fb-panel-duration:500ms;--fb-book-ease:cubic-bezier(.77,0,.175,1)}
 #cscs-answer-feedback .feedback-motion-layer{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:clip}
 #cscs-answer-feedback .toggle-state{flex:none;justify-content:center;width:32px;height:32px;gap:0;border-radius:50%;background:#bacce90b}
-#cscs-answer-feedback .toggle-chevron{display:block;line-height:0;font-size:0;transform-origin:center;transition:transform var(--fb-panel-duration) var(--fb-book-ease)}
+#cscs-answer-feedback .toggle-chevron{display:block;line-height:0;font-size:0;transform:rotate(180deg);transform-origin:center;transition:transform var(--fb-panel-duration) var(--fb-book-ease)}
 #cscs-answer-feedback .toggle-chevron svg{display:block;width:18px;height:18px}
 #cscs-answer-feedback[data-input=keyboard] .toggle-chevron{transition:none}
 @media(prefers-reduced-motion:reduce){#cscs-answer-feedback .toggle-chevron{transition:none}}

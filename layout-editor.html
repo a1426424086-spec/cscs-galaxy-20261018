@@ -45,7 +45,7 @@
   </main>
 </div>
 <script>(() => {
-  const schema='cscs-layout-editor-v2',sourceVersion='v24',sourceSha='d32f43d2f8501b249114ff0bdd688eed64587b2b344e6236658a840308c00b80';
+  const schema='cscs-layout-editor-v2',sourceVersion='v25',sourceSha='1ca3005f5e0e172ea001828c57cf4eadace6cfbf7ca39e0ca60a3ae89a590f74';
   const frame=document.querySelector('#preview'),board=document.querySelector('.phone-board'),space=document.querySelector('.phone-space'),area=document.querySelector('.preview-area'),layer=document.querySelector('.drag-layer'),viewportSelect=document.querySelector('#viewport');
   const testRun=new URLSearchParams(location.search).get('qa')==='check',scope=testRun?':test':'',savedKey=schema+':saved'+scope;
   const names={question:'题干',cards:'三个选项',analysis:'答案解析',navigation:'底部操作'};
@@ -58,7 +58,7 @@
   function status(text){document.querySelector('#save-status').textContent=text;}
   function fitPreview(){const [w,h]=viewport;scale=Math.max(.25,Math.min(1,(area.clientWidth-20)/w,(area.clientHeight-22)/h));board.style.width=w+'px';board.style.height=h+'px';board.style.transform='scale('+scale+')';space.style.width=w*scale+'px';space.style.height=h*scale+'px';document.querySelector('.scale-note').textContent=w+' × '+h+' · 显示比例 '+Math.round(scale*100)+'%';}
   function position(el,r){set(el,'position','absolute');set(el,'inset','auto');set(el,'translate','none');set(el,'transform','none');set(el,'margin','0');px(el,'left',r.x);px(el,'top',r.y);px(el,'width',r.width);px(el,'height',r.height);set(el,'min-height','0');}
-  function sanitize(raw){const out=copy(baseline);if(!raw||!['v21','v22','v23',sourceVersion].includes(raw.sourceVersion)||!raw.values)return out;for(const target of Object.keys(out)){for(const key of Object.keys(out[target])){const n=raw.values[target]?.[key];if(Number.isFinite(n))out[target][key]=clamp(n,-100,1500);}}return out;}
+  function sanitize(raw){const out=copy(baseline);if(!raw||!['v21','v22','v23','v24',sourceVersion].includes(raw.sourceVersion)||!raw.values)return out;for(const target of Object.keys(out)){for(const key of Object.keys(out[target])){const n=raw.values[target]?.[key];if(Number.isFinite(n))out[target][key]=clamp(n,-100,1500);}}return out;}
   function freezeCurrentFrame(){
     const d=frame.contentDocument,live=d.querySelector('#cscs-answer-feedback');if(!live)throw new Error('预览没有载入完成');
     const root=live.cloneNode(true);live.replaceWith(root);const phone=root.querySelector('.feedback-phone');const origin=phone.getBoundingClientRect();
